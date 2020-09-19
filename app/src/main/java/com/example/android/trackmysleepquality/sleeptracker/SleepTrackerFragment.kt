@@ -1,19 +1,3 @@
-/*
- * Copyright 2018, The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.os.Bundle
@@ -49,6 +33,10 @@ class SleepTrackerFragment : Fragment() {
                 ViewModelProvider(
                         this, viewModelFactory).get(SleepTrackerViewModel::class.java)
 
+        val adapter = SleepNightAdapter()
+
+        binding.sleepList.adapter = adapter
+
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
         binding.setLifecycleOwner(this)
@@ -65,6 +53,12 @@ class SleepTrackerFragment : Fragment() {
                 // Reset state to make sure the snackbar is only shown once, even if the device
                 // has a configuration change.
                 sleepTrackerViewModel.doneShowingSnackbar()
+            }
+        })
+
+        sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.data = it
             }
         })
 
